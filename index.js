@@ -12,7 +12,7 @@ import {renderer, scene, app, runtime, npc} from 'app';
       contentId: u,
     });
     o.position.set(
-      -100, 0, -20
+      -80, 0, 20
     ).add(new THREE.Vector3(
       -10 + Math.random() * 20,
       -10 + Math.random() * 20,
