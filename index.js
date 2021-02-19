@@ -1,8 +1,5 @@
 import * as THREE from 'three';
-// import {GLTFLoader} from 'GLTFLoader';
-// import {BufferGeometryUtils} from 'BufferGeometryUtils';
 import {renderer, scene, app, runtime, npc} from 'app';
-// import easing from './easing.js';
 
 (async () => {
   const maxMobs = 20;
