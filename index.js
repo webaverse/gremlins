@@ -12,11 +12,14 @@ import {renderer, scene, app, runtime, npc} from 'app';
       contentId: u,
     });
     o.position.set(
+      -100, 0, -20
+    ).add(new THREE.Vector3(
       -10 + Math.random() * 20,
       -10 + Math.random() * 20,
       -10 + Math.random() * 20
-    );
-    const componentIndex = o.getComponents().findIndex(c => c.type === 'npc');
+    ));
+    const components = o.getComponents();
+    const componentIndex = components.findIndex(c => c.type === 'npc');
     npc.addNpc(o, componentIndex);
   }
 
