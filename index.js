@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import {renderer, scene, app, runtime, npc} from 'app';
 
 (async () => {
-  const maxMobs = 10;
+  const maxMobs = 20;
   for (let i = 0; i < maxMobs; i++) {
     const u = 'https://webaverse.github.io/ghost/manifest.json';
     const o = await runtime.loadFile({
