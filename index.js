@@ -8,7 +8,7 @@ export default () => {
 
   const range = app.getComponent('range') ?? 3;
   const maxMobs = 10;
-  let ghostApps = null;
+  let ghostApps = [];
   
   (async () => {
     const u = 'https://webaverse.github.io/ghost/';
@@ -18,37 +18,35 @@ export default () => {
     const promises = [];
     for (let i = 0; i < maxMobs; i++) {
       promises.push((async () => {
-        const ghostApp = await createApp();
+        const ghostApp = createApp();
+        ghostApp.name = 'ghost-' + i;
 
-        ghostApp.position.copy(app.position)
-          .add(new THREE.Vector3(
-            r(),
-            0, // r(),
-            r(),
-          ));
+        ghostApp.position.set(
+          r(),
+          0, // r(),
+          r()
+        );
         ghostApp.quaternion.copy(app.quaternion);
-        scene.add(ghostApp);
+        app.add(ghostApp);
         ghostApp.updateMatrixWorld();
 
         await ghostApp.addModule(m);
 
         // console.log('new ghost app', ghostApp);
+
+        return ghostApp;
       })());
     }
     ghostApps = await Promise.all(promises);
   })();
 
-  /* useFrame(() => {
-    if (ghostApps) {
-      for (const ghostApp of ghostApps) {
-        ghostApp.update();
-      }
+  app.getPhysicsObjects = () => {
+    const result = [];
+    for (const ghostApp of ghostApps) {
+      result.push.apply(result, ghostApp.getPhysicsObjects());
     }
-  }); */
-
-  /* app.addEventListener('frame', e => {
-    // npc.
-  }); */
+    return result;
+  }
 
   return app;
 };
