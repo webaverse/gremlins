@@ -1,19 +1,20 @@
-import * as THREE from 'three';
+// import * as THREE from 'three';
+// import hpManager from './hp-manager.js';
 import metaversefile from 'metaversefile';
-const {useApp, createApp, useScene} = metaversefile;
+const {useApp, createApp, useHpManager} = metaversefile;
 
 export default () => {
   const app = useApp();
-  const scene = useScene();
+  const hpManager = useHpManager();
 
   const range = app.getComponent('range') ?? 3;
+  const r = () => -range + Math.random() * 2 * range;
   const maxMobs = 10;
+
   let ghostApps = [];
-  
   (async () => {
     const u = 'https://webaverse.github.io/ghost/';
     const m = await metaversefile.import(u);
-    const r = () => -range + Math.random() * 2 * range;
     
     const promises = [];
     for (let i = 0; i < maxMobs; i++) {
@@ -32,7 +33,12 @@ export default () => {
 
         await ghostApp.addModule(m);
 
-        // console.log('new ghost app', ghostApp);
+        const hitTracker = hpManager.makeHitTracker();
+        hitTracker.bind(ghostApp);
+        hitTracker.addEventListener('die', () => {
+          hitTracker.unbind(ghostApp);
+          app.remove(ghostApp);
+        });
 
         return ghostApp;
       })());
@@ -46,7 +52,17 @@ export default () => {
       result.push.apply(result, ghostApp.getPhysicsObjects());
     }
     return result;
-  }
+  };
+  app.hit = (damage, opts) => {
+    const {physicsObject} = opts;
+    for (const ghostApp of ghostApps) {
+      const physicsObjects = ghostApp.getPhysicsObjects();
+      if (physicsObjects.includes(physicsObject)) {
+        ghostApp.hit(damage, opts);
+        break;
+      }
+    }
+  };
 
   return app;
 };
