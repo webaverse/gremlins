@@ -1,4 +1,5 @@
 {
   "name": "gremlins",
+  "description": "gremlins",
   "start_url": "index.js"
 }
